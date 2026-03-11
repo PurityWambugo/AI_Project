@@ -19,9 +19,7 @@ def load_data():
 
 def get_recommendations(user_id, n, ratings, movies_clean, model):
     all_movie_ids = ratings['movie_id'].unique()
-    watched = ratings[
-        ratings['user_id'] == user_id
-    ]['movie_id'].unique()
+    watched = ratings[ratings['user_id'] == user_id]['movie_id'].unique()
     unwatched = [m for m in all_movie_ids if m not in watched]
     preds = [model.predict(user_id, mid) for mid in unwatched]
     preds.sort(key=lambda x: x.est, reverse=True)
