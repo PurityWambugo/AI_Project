@@ -265,6 +265,28 @@ div[data-testid="stButton"] > button:hover {
     box-shadow: 0 8px 28px rgba(201,168,76,0.4) !important;
 }
 
+/* Download button — outlined gold style */
+div[data-testid="stDownloadButton"] > button {
+    background: transparent !important;
+    color: var(--gold) !important;
+    border: 1.5px solid var(--gold) !important;
+    border-radius: 10px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    padding: 0.65rem 2rem !important;
+    width: 100% !important;
+    transition: all 0.2s ease !important;
+}
+div[data-testid="stDownloadButton"] > button:hover {
+    background: var(--gold-dim) !important;
+    color: var(--gold-light) !important;
+    border-color: var(--gold-light) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(201,168,76,0.25) !important;
+}
+
 /* ── RESULTS ── */
 .results-heading {
     font-family: 'Playfair Display', serif;
@@ -500,6 +522,31 @@ if run:
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+
+            # ── Download ──────────────────────────────────────────────────────
+            st.markdown('<hr class="gold-divider">', unsafe_allow_html=True)
+
+            df_download = pd.DataFrame([
+                {"Rank": i, "Movie Title": m['title'], "Predicted Rating": m['rating']}
+                for i, m in enumerate(results, 1)
+            ])
+            csv = df_download.to_csv(index=False).encode('utf-8')
+
+            st.markdown("""
+            <div style="text-align:center; margin-bottom: 0.6rem;">
+                <div style="font-size:0.68rem; font-weight:600; letter-spacing:0.18em;
+                            text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem;">
+                    Save your list
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.download_button(
+                label="⬇  Download Recommendations (.csv)",
+                data=csv,
+                file_name=f"cinematch_user{user_id}_top{n}.csv",
+                mime="text/csv",
+            )
 
         except Exception as e:
             st.error(f"Something went wrong: {e}")
