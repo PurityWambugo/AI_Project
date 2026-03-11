@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import pickle
-from surprise import SVD
 
 st.title("Movie Recommendation System")
 st.write("Enter a User ID to get personalised movie recommendations!")
@@ -36,7 +35,6 @@ def get_recommendations(user_id, n, ratings, movies_clean, model):
         })
     return pd.DataFrame(results)
 
-# Load everything on startup
 model = load_model()
 ratings, movies_clean = load_data()
 st.success("Model ready!")
