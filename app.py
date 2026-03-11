@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import pickle
-from surprise import SVD
 
 st.title("Movie Recommendation System")
 st.write("Enter a User ID to get personalised movie recommendations!")
@@ -20,7 +19,9 @@ def load_data():
 
 def get_recommendations(user_id, n, ratings, movies_clean, model):
     all_movie_ids = ratings['movie_id'].unique()
-    watched = ratings[ratings['user_id'] == user_id]['movie_id'].unique()
+    watched = ratings[
+        ratings['user_id'] == user_id
+    ]['movie_id'].unique()
     unwatched = [m for m in all_movie_ids if m not in watched]
     preds = [model.predict(user_id, mid) for mid in unwatched]
     preds.sort(key=lambda x: x.est, reverse=True)
@@ -36,7 +37,6 @@ def get_recommendations(user_id, n, ratings, movies_clean, model):
         })
     return pd.DataFrame(results)
 
-# Load everything on startup
 model = load_model()
 ratings, movies_clean = load_data()
 st.success("Model ready!")
